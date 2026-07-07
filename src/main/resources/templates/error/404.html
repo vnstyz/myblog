@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 页面未找到 - MyBlog</title>
+    <link rel="stylesheet" th:href="@{/css/blog.css}">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="stars-container"></div>
+    <div class="grid-bg"></div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;
+                min-height: 100vh; text-align: center; position: relative; z-index: 1; padding: 24px;">
+        <div style="font-size: 6rem; font-weight: 800; background: var(--gradient-1);
+                    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+                    background-clip: text; margin-bottom: 16px;">404</div>
+        <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 12px;">页面未找到</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 32px; font-size: 0.95rem;">
+            抱歉，您访问的页面不存在或已被移除。
+        </p>
+        <a href="/" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px;
+                            border: 1px solid var(--border-color); border-radius: var(--radius-sm);
+                            background: var(--bg-card); color: var(--text-secondary);
+                            text-decoration: none; font-size: 0.95rem; transition: var(--transition);">
+            <i class="ri-arrow-left-line"></i> 返回首页
+        </a>
+    </div>
+</body>
+</html>

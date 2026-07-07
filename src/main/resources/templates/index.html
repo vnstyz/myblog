@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title} + ' - MyBlog'">首页 - MyBlog</title>
+    <th:block th:replace="~{fragments :: siteHead}"></th:block>
+</head>
+<body>
+
+    <th:block th:replace="~{fragments :: siteBackground}"></th:block>
+    <th:block th:replace="~{fragments :: siteGridBg}"></th:block>
+
+    <th:block th:replace="~{fragments :: siteNavbar('home')}"></th:block>
+
+    <th:block th:replace="~{fragments :: heroSection(${title}, '分享技术心得，记录生活点滴，探索编程世界的无限可能。', true, false)}"></th:block>
+
+    <!-- ========== 主内容区 ========== -->
+    <div class="main-container">
+        <div class="content-grid">
+
+            <!-- 文章列表 -->
+            <main>
+                <div class="section-header">
+                    <h2 class="section-title">最新文章</h2>
+                </div>
+
+                <!-- 有文章时 -->
+                <th:block th:if="${articles != null and !articles.isEmpty()}">
+                    <article class="article-card fade-up" th:each="article : ${articles}">
+                        <div class="article-card-header">
+                            <span class="article-card-category"
+                                  th:classappend="${article.categoryName == '生活随笔'} ? 'cat-life' : (${article.categoryName == '学习笔记'} ? 'cat-note' : 'cat-tech')"
+                                  th:text="${article.categoryName != null ? article.categoryName : '未分类'}">技术分享</span>
+                            <span class="article-card-date"
+                                  th:text="${article.createdTime != null ? #temporals.format(article.createdTime, 'yyyy-MM-dd') : ''}">2024-01-01</span>
+                        </div>
+                        <h3 class="article-card-title">
+                            <a th:href="@{'/article/' + ${article.id}}" th:text="${article.title}">文章标题</a>
+                        </h3>
+                        <p class="article-card-summary"
+                           th:text="${article.summary != null and !article.summary.isEmpty()} ? ${article.summary} : ${#strings.abbreviate(article.content, 120)}">
+                           文章摘要...
+                        </p>
+                        <div class="article-card-footer">
+                            <span><i class="ri-eye-line"></i> <span th:text="${article.viewCount}">0</span> 浏览</span>
+                            <span><i class="ri-heart-line"></i> <span th:text="${article.likeCount}">0</span> 点赞</span>
+                            <span><i class="ri-chat-3-line"></i> <span th:text="${article.commentCount}">0</span> 评论</span>
+                        </div>
+                    </article>
+                </th:block>
+
+                <!-- 无文章时 -->
+                <div class="empty-state" th:unless="${articles != null and !articles.isEmpty()}">
+                    <div class="empty-state-icon"><i class="ri-inbox-line"></i></div>
+                    <p class="empty-state-text">还没有发布任何文章，敬请期待～</p>
+                </div>
+            </main>
+
+            <!-- 侧边栏 -->
+            <aside>
+                <!-- 个人信息卡片 -->
+                <div class="sidebar-widget profile-card fade-up">
+                    <div class="profile-avatar"><i class="ri-user-3-line"></i></div>
+                    <div class="profile-name">博客作者</div>
+                    <p class="profile-bio">
+                        热爱技术，乐于分享。专注于后端开发与系统架构设计。
+                    </p>
+                    <div class="profile-social">
+                        <a href="#" title="GitHub"><i class="ri-github-fill"></i></a>
+                        <a href="#" title="邮箱"><i class="ri-mail-line"></i></a>
+                        <a href="#" title="RSS"><i class="ri-rss-line"></i></a>
+                    </div>
+                </div>
+
+                <!-- 分类标签 -->
+                <div class="sidebar-widget fade-up">
+                    <h3 class="sidebar-widget-title">文章分类</h3>
+                    <div class="tag-cloud">
+                        <a href="#" class="tag-item">技术分享</a>
+                        <a href="#" class="tag-item">生活随笔</a>
+                        <a href="#" class="tag-item">学习笔记</a>
+                    </div>
+                </div>
+
+                <!-- 热门文章 -->
+                <div class="sidebar-widget fade-up">
+                    <h3 class="sidebar-widget-title">热门文章</h3>
+                    <th:block th:if="${hotArticles != null and !hotArticles.isEmpty()}">
+                        <a class="hot-article-item" th:each="hot, iter : ${hotArticles}"
+                           th:href="@{'/article/' + ${hot.id}}">
+                            <span class="hot-article-rank" th:text="${iter.index + 1}">01</span>
+                            <div class="hot-article-info">
+                                <h4 th:text="${hot.title}">热门文章标题</h4>
+                                <span th:text="${hot.viewCount} + ' 浏览'">0 浏览</span>
+                            </div>
+                        </a>
+                    </th:block>
+                    <div class="empty-state-text" th:unless="${hotArticles != null and !hotArticles.isEmpty()}"
+                         style="padding:16px 0;font-size:0.85rem;">
+                        暂无热门文章
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments :: siteFooter}"></th:block>
+
+    <script th:src="@{/js/blog.js}"></script>
+</body>
+</html>

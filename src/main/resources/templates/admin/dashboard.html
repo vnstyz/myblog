@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - MyBlog'">后台管理 - MyBlog</title>
+    <th:block th:replace="~{fragments :: siteHead}"></th:block>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+    <style>
+        .EasyMDEContainer .editor-toolbar {
+            border-color: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .EasyMDEContainer .editor-toolbar button {
+            color: var(--text-secondary) !important;
+        }
+        .EasyMDEContainer .editor-toolbar button:hover,
+        .EasyMDEContainer .editor-toolbar button.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--text-primary) !important;
+        }
+        .EasyMDEContainer .CodeMirror {
+            background: var(--bg-primary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+            min-height: 280px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', monospace;
+        }
+        .EasyMDEContainer .CodeMirror-cursor {
+            border-color: var(--text-primary);
+        }
+        .EasyMDEContainer .editor-preview,
+        .EasyMDEContainer .editor-preview-side {
+            background: var(--bg-primary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <th:block th:replace="~{fragments :: siteBackground}"></th:block>
+    <th:block th:replace="~{fragments :: siteGridBg}"></th:block>
+    <th:block th:replace="~{fragments :: siteNavbar('admin')}"></th:block>
+
+    <main class="admin-dashboard">
+        <section class="admin-hero">
+            <h1 class="admin-hero-title">后台管理</h1>
+            <p class="admin-hero-subtitle">在这里管理你的博客内容与数据</p>
+        </section>
+
+        <section class="admin-stats">
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon"><i class="ri-article-line"></i></div>
+                <div class="admin-stat-info">
+                    <div class="admin-stat-value" th:text="${articleCount}">0</div>
+                    <div class="admin-stat-label">已发布文章</div>
+                </div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon"><i class="ri-eye-line"></i></div>
+                <div class="admin-stat-info">
+                    <div class="admin-stat-value" th:text="${totalViews}">0</div>
+                    <div class="admin-stat-label">总浏览量</div>
+                </div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon"><i class="ri-heart-line"></i></div>
+                <div class="admin-stat-info">
+                    <div class="admin-stat-value" th:text="${totalLikes}">0</div>
+                    <div class="admin-stat-label">总点赞数</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="admin-section">
+            <div class="section-header">
+                <h2 class="section-title">文章管理</h2>
+                <button class="btn btn-primary" id="btnAddArticle">
+                    <i class="ri-add-line"></i> 新建文章
+                </button>
+            </div>
+            <div class="admin-table-wrapper">
+                <table class="admin-table" id="articlesTable">
+                    <thead>
+                        <tr>
+                            <th>标题</th>
+                            <th>状态</th>
+                            <th>浏览</th>
+                            <th>点赞</th>
+                            <th>发布时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="articlesTableBody">
+                        <tr th:each="article : ${recentArticles}">
+                            <td>
+                                <a th:href="@{/article/{id}(id=${article.id})}" th:text="${article.title}">文章标题</a>
+                            </td>
+                            <td>
+                                <span class="admin-status" th:classappend="${article.status} == 1 ? 'published' : 'draft'"
+                                      th:text="${article.status} == 1 ? '已发布' : '草稿'">已发布</span>
+                            </td>
+                            <td th:text="${article.viewCount}">0</td>
+                            <td th:text="${article.likeCount}">0</td>
+                            <td th:text="${article.createdTime}">2024-01-01</td>
+                            <td class="admin-actions">
+                                <button class="btn-icon btn-edit" th:data-id="${article.id}" title="编辑">
+                                    <i class="ri-edit-line"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" th:data-id="${article.id}" title="删除">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(recentArticles)}" id="emptyRow">
+                            <td colspan="6" class="admin-empty-cell">暂无文章</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- 文章编辑弹窗 -->
+    <div class="modal-overlay" id="articleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">新建文章</h3>
+                <button class="modal-close" id="modalClose"><i class="ri-close-line"></i></button>
+            </div>
+            <form class="modal-body" id="articleForm">
+                <input type="hidden" id="articleId">
+                <div class="form-group">
+                    <label for="articleTitle">标题</label>
+                    <input type="text" id="articleTitle" name="title" required placeholder="请输入文章标题">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="articleStatus">状态</label>
+                        <select id="articleStatus" name="status">
+                            <option value="0">草稿</option>
+                            <option value="1">已发布</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleCategory">分类</label>
+                        <select id="articleCategory" name="categoryId">
+                            <option value="1">默认分类</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="articleSummary">摘要</label>
+                    <textarea id="articleSummary" name="summary" rows="2" placeholder="请输入文章摘要"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="articleContentMarkdown">内容（Markdown）</label>
+                    <textarea id="articleContentMarkdown" name="content" rows="10" placeholder="请输入 Markdown 文章内容"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnCancel">取消</button>
+                    <button type="submit" class="btn btn-primary" id="btnSave">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 删除确认弹窗 -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h3 class="modal-title">确认删除</h3>
+                <button class="modal-close" id="deleteModalClose"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="confirm-text">确定要删除文章「<span id="deleteArticleTitle"></span>」吗？此操作不可撤销。</p>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="btnCancelDelete">取消</button>
+                    <button class="btn btn-danger" id="btnConfirmDelete">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments :: siteFooter}"></th:block>
+    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+    <script th:src="@{/js/blog.js}"></script>
+    <script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

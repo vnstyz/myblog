@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title} + ' - MyBlog'">关于我 - MyBlog</title>
+    <th:block th:replace="~{fragments :: siteHead}"></th:block>
+</head>
+<body>
+
+    <th:block th:replace="~{fragments :: siteBackground}"></th:block>
+    <th:block th:replace="~{fragments :: siteGridBg}"></th:block>
+
+    <th:block th:replace="~{fragments :: siteNavbar('about')}"></th:block>
+
+    <th:block th:replace="~{fragments :: heroSection(${title}, '一名热爱技术的全栈开发工程师，在这里记录学习心得、分享技术经验与生活感悟。', false, true)}"></th:block>
+
+    <!-- ========== 关于页面主体 ========== -->
+    <div class="about-wrapper">
+
+        <!-- 个人介绍 -->
+        <div class="sidebar-widget fade-up" style="margin-bottom: 32px;">
+            <h3 class="sidebar-widget-title">关于我</h3>
+            <p style="color: var(--text-secondary); line-height: 1.9; font-size: 0.95rem;">
+                你好！我是一名热爱技术的全栈开发工程师，拥有多年的软件开发经验。<br><br>
+                这个博客是我记录学习心得、分享技术经验和生活感悟的地方。
+                我相信知识应该被分享，技术应该让生活更美好。在这里，
+                你会看到关于后端开发、系统架构、开源技术等方面的内容。<br><br>
+                希望我的分享能对你有所帮助，也欢迎通过邮件或社交媒体与我交流讨论！
+            </p>
+        </div>
+
+        <!-- 技能 -->
+        <div class="sidebar-widget fade-up" style="margin-bottom: 32px;">
+            <h3 class="sidebar-widget-title">技术栈</h3>
+
+            <div class="skill-bar">
+                <div class="skill-bar-header">
+                    <span class="skill-name">Java / Spring Boot</span>
+                    <span class="skill-pct">90%</span>
+                </div>
+                <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width: 90%;"></div>
+                </div>
+            </div>
+
+            <div class="skill-bar">
+                <div class="skill-bar-header">
+                    <span class="skill-name">MySQL / MyBatis</span>
+                    <span class="skill-pct">85%</span>
+                </div>
+                <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width: 85%;"></div>
+                </div>
+            </div>
+
+            <div class="skill-bar">
+                <div class="skill-bar-header">
+                    <span class="skill-name">HTML / CSS / JavaScript</span>
+                    <span class="skill-pct">80%</span>
+                </div>
+                <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width: 80%;"></div>
+                </div>
+            </div>
+
+            <div class="skill-bar">
+                <div class="skill-bar-header">
+                    <span class="skill-name">Linux / Docker</span>
+                    <span class="skill-pct">75%</span>
+                </div>
+                <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width: 75%;"></div>
+                </div>
+            </div>
+
+            <div class="skill-bar">
+                <div class="skill-bar-header">
+                    <span class="skill-name">Redis / MQ</span>
+                    <span class="skill-pct">70%</span>
+                </div>
+                <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width: 70%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 时间线 -->
+        <div class="sidebar-widget fade-up">
+            <h3 class="sidebar-widget-title">我的经历</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="time">2024 年</div>
+                    <div class="title">创建个人博客</div>
+                    <div class="desc">使用 Spring Boot + Thymeleaf 搭建个人技术博客，分享开发经验与技术心得。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">2023 年</div>
+                    <div class="title">高级后端开发工程师</div>
+                    <div class="desc">负责核心业务系统的架构设计与开发，主导微服务架构升级，提升系统性能与可维护性。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">2021 年</div>
+                    <div class="title">后端开发工程师</div>
+                    <div class="desc">参与多个大型 Web 项目开发，积累了丰富的后端开发经验，熟练掌握了 Spring 全家桶。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">2019 年</div>
+                    <div class="title">开启编程之旅</div>
+                    <div class="desc">系统学习计算机基础知识，深入理解数据结构、算法、网络协议，为后续发展打下坚实基础。</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <th:block th:replace="~{fragments :: siteFooter}"></th:block>
+
+    <script th:src="@{/js/blog.js}"></script>
+</body>
+</html>
