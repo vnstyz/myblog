@@ -35,6 +35,14 @@
             border-color: var(--border-color);
             color: var(--text-primary);
         }
+        .admin-hero-actions {
+            margin-top: 22px;
+        }
+        .form-error {
+            color: #EF4444;
+            font-size: 13px;
+            margin: 4px 0 0;
+        }
     </style>
 </head>
 <body>
@@ -46,6 +54,11 @@
         <section class="admin-hero">
             <h1 class="admin-hero-title">后台管理</h1>
             <p class="admin-hero-subtitle">在这里管理你的博客内容与数据</p>
+            <div class="admin-hero-actions">
+                <button class="btn btn-primary" id="btnChangePassword">
+                    <i class="ri-lock-password-line"></i> 修改密码
+                </button>
+            </div>
         </section>
 
         <section class="admin-stats">
@@ -179,6 +192,35 @@
                     <button class="btn btn-danger" id="btnConfirmDelete">删除</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- 修改密码弹窗 -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h3 class="modal-title">修改密码</h3>
+                <button class="modal-close" id="passwordModalClose"><i class="ri-close-line"></i></button>
+            </div>
+            <form class="modal-body" id="passwordForm">
+                <div class="form-group">
+                    <label for="oldPassword">当前密码</label>
+                    <input type="password" id="oldPassword" name="oldPassword" required placeholder="请输入当前密码" autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">新密码</label>
+                    <input type="password" id="newPassword" name="newPassword" required placeholder="至少 6 位" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">确认新密码</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="请再次输入新密码" autocomplete="new-password">
+                </div>
+                <p class="form-error" id="passwordError" hidden></p>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnCancelPassword">取消</button>
+                    <button type="submit" class="btn btn-primary" id="btnSavePassword">保存</button>
+                </div>
+            </form>
         </div>
     </div>
 

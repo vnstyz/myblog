@@ -161,6 +161,67 @@
         }
     }
 
+    const passwordModal = document.getElementById('passwordModal');
+    const passwordForm = document.getElementById('passwordForm');
+    const passwordError = document.getElementById('passwordError');
+
+    function openPasswordModal() {
+        passwordError.hidden = true;
+        passwordForm.reset();
+        passwordModal.classList.add('active');
+    }
+
+    function closePasswordModal() {
+        passwordModal.classList.remove('active');
+        passwordForm.reset();
+        passwordError.hidden = true;
+    }
+
+    function showPasswordError(msg) {
+        if (passwordError) {
+            passwordError.textContent = msg;
+            passwordError.hidden = false;
+        } else {
+            alert(msg);
+        }
+    }
+
+    async function savePassword(e) {
+        e.preventDefault();
+        const oldPassword = document.getElementById('oldPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (!oldPassword || !newPassword || !confirmPassword) {
+            showPasswordError('请填写所有字段');
+            return;
+        }
+        if (newPassword.length < 6) {
+            showPasswordError('新密码长度至少为 6 位');
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            showPasswordError('两次输入的新密码不一致');
+            return;
+        }
+
+        try {
+            await request('/admin/api/user/change-password', {
+                method: 'POST',
+                body: JSON.stringify({ oldPassword, newPassword, confirmPassword })
+            });
+            closePasswordModal();
+            alert('密码修改成功');
+        } catch (err) {
+            let msg = err.message || '密码修改失败';
+            try {
+                const parsed = JSON.parse(err.message);
+                if (parsed && parsed.message) msg = parsed.message;
+            } catch (_) { /* 保留原始文本 */ }
+            showPasswordError(msg);
+        }
+    }
+
     function init() {
         if (!articlesTableBody) return;
 
@@ -183,6 +244,11 @@
         document.getElementById('modalClose')?.addEventListener('click', closeArticleModal);
         document.getElementById('btnCancel')?.addEventListener('click', closeArticleModal);
         articleForm?.addEventListener('submit', saveArticle);
+
+        document.getElementById('btnChangePassword')?.addEventListener('click', openPasswordModal);
+        document.getElementById('passwordModalClose')?.addEventListener('click', closePasswordModal);
+        document.getElementById('btnCancelPassword')?.addEventListener('click', closePasswordModal);
+        passwordForm?.addEventListener('submit', savePassword);
 
         document.getElementById('deleteModalClose')?.addEventListener('click', closeDeleteModal);
         document.getElementById('btnCancelDelete')?.addEventListener('click', closeDeleteModal);

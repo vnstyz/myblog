@@ -1,5 +1,6 @@
 package site.vnstyz.myblog.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,15 +45,20 @@ public class HomeController {
     }
 
     @GetMapping("/article/{id}")
-    public String articleDetail(@PathVariable Long id, Model model) {
+    public String articleDetail(@PathVariable Long id, HttpSession session, Model model) {
         Article article = articleService.getRenderedArticleById(id);
-        if (article == null) {
+        // 仅允许访问已发布文章，草稿对外返回 404，避免通过遍历 ID 泄露
+        if (article == null || !Integer.valueOf(1).equals(article.getStatus())) {
             return "error/404";
         }
 
-        // 增加浏览数
-        articleService.incrementViewCount(id);
-        article.setViewCount(article.getViewCount() + 1);
+        // 基于会话去重，防止刷新即刷量
+        String viewedKey = "viewed_article_" + id;
+        if (session.getAttribute(viewedKey) == null) {
+            articleService.incrementViewCount(id);
+            article.setViewCount(article.getViewCount() + 1);
+            session.setAttribute(viewedKey, Boolean.TRUE);
+        }
 
         model.addAttribute("article", article);
         model.addAttribute("title", article.getTitle());

@@ -2,6 +2,7 @@ package site.vnstyz.myblog.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,8 +16,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private LoginAttemptService loginAttemptService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // 登录失败次数超限时锁定，缓解暴力破解
+        if (loginAttemptService.isBlocked(loginAttemptService.getClientKey())) {
+            throw new LockedException("登录尝试过于频繁，请稍后再试");
+        }
+
         User user = userMapper.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("用户名或密码错误");

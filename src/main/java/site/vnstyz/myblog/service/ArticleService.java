@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import site.vnstyz.myblog.dto.ArticleRequest;
 import site.vnstyz.myblog.entity.Article;
 import site.vnstyz.myblog.entity.User;
 import site.vnstyz.myblog.mapper.ArticleMapper;
@@ -44,25 +45,27 @@ public class ArticleService {
         return article;
     }
 
-    public Article createArticle(Article article) {
+    public Article createArticle(ArticleRequest request) {
+        Article article = new Article();
+
+        // 仅从可信 DTO 字段赋值，敏感字段由服务端控制
+        article.setTitle(request.getTitle());
+        article.setSummary(request.getSummary());
+        article.setContent(request.getContent());
+        article.setStatus(request.getStatus() == null ? 0 : request.getStatus());
+        article.setCategoryId(request.getCategoryId() == null ? 1L : request.getCategoryId());
+
         LocalDateTime now = LocalDateTime.now();
         article.setCreatedTime(now);
         article.setUpdateTime(now);
+        // 统计字段服务端强制初始化，禁止客户端篡改
         article.setViewCount(0);
         article.setLikeCount(0);
         article.setCommentCount(0);
-        if (article.getStatus() == null) {
-            article.setStatus(0);
-        }
 
         // 首次发布时设置发布时间
         if (Integer.valueOf(1).equals(article.getStatus())) {
             article.setPublishedTime(now);
-        }
-
-        // 设置默认分类
-        if (article.getCategoryId() == null) {
-            article.setCategoryId(1L);
         }
 
         // 设置当前登录用户为作者
@@ -88,13 +91,21 @@ public class ArticleService {
         return user != null ? user.getId() : null;
     }
 
-    public Article updateArticle(Long id, Article article) {
+    public Article updateArticle(Long id, ArticleRequest request) {
         Article existing = articleMapper.findById(id);
         if (existing == null) {
             return null;
         }
 
+        Article article = new Article();
         article.setId(id);
+        // 仅更新允许客户端修改的字段
+        article.setTitle(request.getTitle());
+        article.setSummary(request.getSummary());
+        article.setContent(request.getContent());
+        article.setStatus(request.getStatus() == null ? existing.getStatus() : request.getStatus());
+        article.setCategoryId(request.getCategoryId() == null ? existing.getCategoryId() : request.getCategoryId());
+
         LocalDateTime now = LocalDateTime.now();
         article.setUpdateTime(now);
 

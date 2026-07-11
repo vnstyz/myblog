@@ -1,8 +1,10 @@
 package site.vnstyz.myblog.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import site.vnstyz.myblog.dto.ArticleRequest;
 import site.vnstyz.myblog.entity.Article;
 import site.vnstyz.myblog.service.ArticleService;
 
@@ -32,13 +34,13 @@ public class ArticleRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Article> create(@RequestBody Article article) {
-        return ResponseEntity.ok(articleService.createArticle(article));
+    public ResponseEntity<Article> create(@Valid @RequestBody ArticleRequest request) {
+        return ResponseEntity.ok(articleService.createArticle(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Article> update(@PathVariable Long id, @RequestBody Article article) {
-        Article updated = articleService.updateArticle(id, article);
+    public ResponseEntity<Article> update(@PathVariable Long id, @Valid @RequestBody ArticleRequest request) {
+        Article updated = articleService.updateArticle(id, request);
         if (updated == null) {
             return ResponseEntity.notFound().build();
         }

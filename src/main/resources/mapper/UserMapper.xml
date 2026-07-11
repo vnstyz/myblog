@@ -20,4 +20,10 @@
         SELECT * FROM user WHERE username = #{username}
     </select>
 
+    <update id="updatePassword">
+        UPDATE user
+        SET password = #{password}, updated_time = NOW()
+        WHERE id = #{id}
+    </update>
+
 </mapper>

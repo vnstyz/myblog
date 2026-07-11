@@ -58,11 +58,12 @@ INSERT INTO `category` (`name`, `description`) VALUES
 ('生活随笔', '生活中的点点滴滴'),
 ('学习笔记', '学习过程中的记录');
 
--- 插入默认用户（密码：123456，实际使用时请修改）
-INSERT INTO `user` (`username`, `password`, `nickname`, `email`, `status`, `role`) VALUES
-('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVYITy', '博主', 'admin@example.com', 1, 'ADMIN');
+-- 默认管理员账号由应用启动时的 DatabaseInitializer 自动创建：
+--   * 通过环境变量 ADMIN_USERNAME / ADMIN_PASSWORD 指定初始凭据；
+--   * 若未指定 ADMIN_PASSWORD，则自动生成随机强密码并打印到应用日志（仅首次）。
+-- 请勿在此处硬编码明文密码或其哈希值。
 
--- 插入测试文章
+-- 插入测试文章（内容以 Markdown 存储，展示时经过 HTML 清洗）
 INSERT INTO `article` (`title`, `content`, `summary`, `status`, `category_id`, `created_by`, `published_time`) VALUES
-('欢迎使用我的博客', '<h2>欢迎来到我的个人博客！</h2><p>这里将记录我的技术学习笔记、生活随笔和一些思考。</p><p>这是一个基于Spring Boot和MyBatis构建的简单博客系统。</p>', '欢迎使用我的博客，一个简单的技术博客系统。', 1, 1, 1, CURRENT_TIMESTAMP),
-('Spring Boot入门', '<h2>Spring Boot简介</h2><p>Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that you can "just run".</p><p>主要特性：</p><ul><li>独立的Spring应用程序</li><li>内嵌Servlet容器</li><li>自动配置Spring</li><li>提供生产级特性</li></ul>', 'Spring Boot入门指南', 1, 1, 1, CURRENT_TIMESTAMP);
+('欢迎使用我的博客', '## 欢迎来到我的个人博客！\n\n这里将记录我的技术学习笔记、生活随笔和一些思考。\n\n这是一个基于 Spring Boot 和 MyBatis 构建的简单博客系统。', '欢迎使用我的博客，一个简单的技术博客系统。', 1, 1, 1, CURRENT_TIMESTAMP),
+('Spring Boot入门', '## Spring Boot简介\n\nSpring Boot makes it easy to create stand-alone, production-grade Spring based Applications that you can "just run".\n\n主要特性：\n\n- 独立的Spring应用程序\n- 内嵌Servlet容器\n- 自动配置Spring\n- 提供生产级特性', 'Spring Boot入门指南', 1, 1, 1, CURRENT_TIMESTAMP);

@@ -8,4 +8,6 @@ import site.vnstyz.myblog.entity.User;
 public interface UserMapper {
 
     User findByUsername(@Param("username") String username);
+
+    int updatePassword(@Param("id") Long id, @Param("password") String password);
 }
