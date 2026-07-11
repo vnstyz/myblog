@@ -28,8 +28,14 @@ public interface ArticleMapper {
     // 根据状态查询文章
     List<Article> findByStatus(@Param("status") Integer status);
 
-    // 更新浏览数
-    int updateViewCount(@Param("id") Long id, @Param("count") Integer count);
+    // 浏览量绝对值写回（Redis 落库用）
+    int setViewCount(@Param("id") Long id, @Param("count") Long count);
+
+    // 仅查询单篇文章浏览量（Redis 缺失回落用）
+    Long findViewCountById(@Param("id") Long id);
+
+    // 轻量查询：文章 id 与浏览量（预热/落库遍历用）
+    List<Map<String, Object>> selectIdAndViews();
 
     // 更新点赞数
     int updateLikeCount(@Param("id") Long id, @Param("count") Integer count);

@@ -72,11 +72,19 @@
         DELETE FROM article WHERE id = #{id}
     </delete>
 
-    <update id="updateViewCount">
+    <update id="setViewCount">
         UPDATE article
-        SET view_count = view_count + #{count}
+        SET view_count = #{count}
         WHERE id = #{id}
     </update>
+
+    <select id="findViewCountById" resultType="java.lang.Long">
+        SELECT view_count FROM article WHERE id = #{id}
+    </select>
+
+    <select id="selectIdAndViews" resultType="java.util.HashMap">
+        SELECT id, view_count FROM article
+    </select>
 
     <update id="updateLikeCount">
         UPDATE article

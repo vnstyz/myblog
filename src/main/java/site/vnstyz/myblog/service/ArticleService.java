@@ -128,10 +128,6 @@ public class ArticleService {
         return articleMapper.findByStatus(1);
     }
 
-    public void incrementViewCount(Long id) {
-        articleMapper.updateViewCount(id, 1);
-    }
-
     public void incrementLikeCount(Long id) {
         articleMapper.updateLikeCount(id, 1);
     }

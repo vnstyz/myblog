@@ -40,6 +40,16 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- Redis：实时浏览量计数器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
         <!-- MyBatis -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

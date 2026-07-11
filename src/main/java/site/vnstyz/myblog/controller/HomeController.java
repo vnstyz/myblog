@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import site.vnstyz.myblog.entity.Article;
 import site.vnstyz.myblog.service.ArticleService;
+import site.vnstyz.myblog.service.TrafficService;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,9 @@ public class HomeController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private TrafficService trafficService;
+
     @GetMapping
     public String home(Model model) {
         // 获取已发布的文章列表
@@ -28,7 +32,7 @@ public class HomeController {
         // 获取统计数据
         Map<String, Object> stats = articleService.getStats();
         Object articleCount = stats != null ? stats.getOrDefault("articleCount", 0) : 0;
-        Object totalViews = stats != null ? stats.getOrDefault("totalViews", 0) : 0;
+        Object totalViews = trafficService.getSiteTotalViews();
         Object totalLikes = stats != null ? stats.getOrDefault("totalLikes", 0) : 0;
 
         // 获取热门文章
@@ -55,10 +59,11 @@ public class HomeController {
         // 基于会话去重，防止刷新即刷量
         String viewedKey = "viewed_article_" + id;
         if (session.getAttribute(viewedKey) == null) {
-            articleService.incrementViewCount(id);
-            article.setViewCount(article.getViewCount() + 1);
+            trafficService.recordView(id);
             session.setAttribute(viewedKey, Boolean.TRUE);
         }
+        // 实时浏览量走 Redis，保证落库前也准确
+        article.setViewCount((int) trafficService.getArticleViews(id));
 
         model.addAttribute("article", article);
         model.addAttribute("title", article.getTitle());
