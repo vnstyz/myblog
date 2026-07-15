@@ -1,0 +1,16 @@
+# 构建上下文忽略：减小传输体积并避免旧产物污染
+target/
+**/target/
+.git/
+.gitignore
+*.md
+.idea/
+*.iml
+.vscode/
+.mvn/
+**/mvnw
+**/mvnw.cmd
+**/*.iml
+Dockerfile
+docker-compose.yml
+.dockerignore

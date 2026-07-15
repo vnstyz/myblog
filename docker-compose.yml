@@ -1,0 +1,87 @@
+# myblog 容器编排：app + mysql + redis
+# 用法：
+#   构建并启动： docker compose up --build -d
+#   查看日志：   docker compose logs -f app
+#   停止：       docker compose down
+#   停止并删除数据卷（会清空数据）： docker compose down -v
+#
+# 可在当前目录创建 .env 覆盖以下默认值（如 MYSQL_ROOT_PASSWORD、ADMIN_PASSWORD）。
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: myblog-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: myblog
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    # 首次启动自动执行建库建表脚本
+    volumes:
+      - ./src/main/resources/db/migration/001_initial_schema.sql:/docker-entrypoint-initdb.d/001_initial_schema.sql:ro
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - myblog-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: myblog-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - myblog-net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: myblog-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      # 覆盖 application.yml 中硬编码的 localhost 连接串
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/myblog?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true"
+      DB_USERNAME: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ""
+      REDIS_DATABASE: "0"
+      # 初始管理员凭据（可选，不填则由应用自动生成随机密码并打印到日志）
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      # 生产可改为 info 减少日志噪音
+      LOGGING_LEVEL_SITE_VNSTYZ_MYBLOG: ${LOG_LEVEL:-info}
+    networks:
+      - myblog-net
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  myblog-net:
+    driver: bridge
