@@ -52,6 +52,21 @@ CREATE TABLE IF NOT EXISTS `article` (
     KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文章表';
 
+-- 评论表
+CREATE TABLE IF NOT EXISTS `comment` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `article_id` BIGINT NOT NULL COMMENT '文章ID',
+    `author_name` VARCHAR(30) NOT NULL COMMENT '评论者昵称（匿名访客自动生成）',
+    `content` VARCHAR(500) NOT NULL COMMENT '评论内容',
+    `ip` VARCHAR(45) DEFAULT NULL COMMENT '评论者IP（限流/审计，不对外展示）',
+    `status` TINYINT DEFAULT 1 COMMENT '状态: 0-隐藏, 1-可见',
+    `created_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_article_id` (`article_id`),
+    KEY `idx_created_time` (`created_time`),
+    FOREIGN KEY (`article_id`) REFERENCES `article`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='评论表';
+
 -- 插入测试数据
 INSERT INTO `category` (`name`, `description`) VALUES
 ('技术分享', '记录技术学习和分享'),

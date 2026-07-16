@@ -863,6 +863,32 @@ body {
     color: #f87171;
 }
 
+.like-btn.loading {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.like-tip {
+    min-height: 20px;
+    margin-top: 12px;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.like-tip:not(:empty) {
+    opacity: 1;
+}
+
+.like-tip.success {
+    color: #4ade80;
+}
+
+.like-tip.error {
+    color: #f87171;
+}
+
 /* ==========================================
    关于页面
    ========================================== */
@@ -1060,6 +1086,212 @@ body {
     color: var(--text-muted);
     font-size: 1rem;
 }
+
+/* ==========================================
+   评论区
+   ========================================== */
+.comment-section {
+    margin-top: 48px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+.comment-header i {
+    color: var(--accent-light);
+}
+
+.comment-count-badge {
+    min-width: 26px;
+    height: 26px;
+    padding: 0 8px;
+    border-radius: 13px;
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-form {
+    margin-bottom: 28px;
+}
+
+.comment-input {
+    width: 100%;
+    min-height: 96px;
+    padding: 14px 16px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    font-family: inherit;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    transition: var(--transition);
+}
+
+.comment-input::placeholder {
+    color: var(--text-muted);
+}
+
+.comment-input:focus {
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.comment-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.comment-counter {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.comment-submit {
+    padding: 10px 22px;
+}
+
+.comment-submit.loading {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.comment-tip {
+    min-height: 18px;
+    margin-top: 12px;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.comment-tip:not(:empty) {
+    opacity: 1;
+}
+
+.comment-tip.success {
+    color: #4ade80;
+}
+
+.comment-tip.error {
+    color: #f87171;
+}
+
+.comment-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.comment-item {
+    display: flex;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-color);
+    animation: commentFadeIn 0.4s ease;
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-avatar {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--gradient-1);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+.comment-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+}
+
+.comment-time {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.comment-content {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.comment-empty {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+}
+
+.comment-empty i {
+    font-size: 2.4rem;
+    opacity: 0.4;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.comment-empty p {
+    font-size: 0.9rem;
+}
+
+@keyframes commentFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+    .comment-section {
+        padding: 20px;
+    }
+}
+
 
 /* ==========================================
    滚动条

@@ -26,7 +26,7 @@ public class SecurityConfig {
                 // Druid 监控页面仅管理员可访问
                 .requestMatchers("/druid/**").hasRole("ADMIN")
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/", "/about", "/article/**", "/health", "/error/**").permitAll()
+                .requestMatchers("/", "/about", "/article/**", "/api/like/**", "/api/comments/**", "/health", "/error/**").permitAll()
                 .anyRequest().authenticated()
             )
             // 显式启用 CSRF 防护（默认启用），前端通过 meta 标签携带 token

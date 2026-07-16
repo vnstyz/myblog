@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.vnstyz.myblog.mapper.CommentMapper">
+
+    <resultMap id="commentResultMap" type="Comment">
+        <id property="id" column="id"/>
+        <result property="articleId" column="article_id"/>
+        <result property="authorName" column="author_name"/>
+        <result property="content" column="content"/>
+        <result property="ip" column="ip"/>
+        <result property="status" column="status"/>
+        <result property="createdTime" column="created_time"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="Comment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO comment (
+            article_id, author_name, content, ip, status, created_time
+        ) VALUES (
+            #{articleId}, #{authorName}, #{content}, #{ip}, #{status}, #{createdTime}
+        )
+    </insert>
+
+    <select id="findVisibleByArticleId" resultMap="commentResultMap">
+        SELECT id, article_id, author_name, content, ip, status, created_time
+        FROM comment
+        WHERE article_id = #{articleId} AND status = 1
+        ORDER BY created_time ASC, id ASC
+    </select>
+
+</mapper>

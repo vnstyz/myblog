@@ -40,6 +40,15 @@ public interface ArticleMapper {
     // 更新点赞数
     int updateLikeCount(@Param("id") Long id, @Param("count") Integer count);
 
+    // 仅查询单篇文章点赞数（点赞后回读用）
+    Long findLikeCountById(@Param("id") Long id);
+
+    // 更新评论数
+    int updateCommentCount(@Param("id") Long id, @Param("count") Integer count);
+
+    // 仅查询单篇文章评论数（评论后回读用）
+    Long findCommentCountById(@Param("id") Long id);
+
     // 获取统计数据
     Map<String, Object> getStats();
 

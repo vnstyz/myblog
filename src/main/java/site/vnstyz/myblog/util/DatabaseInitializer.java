@@ -123,6 +123,24 @@ public class DatabaseInitializer implements CommandLineRunner {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """;
         statement.execute(createArticleTable);
+
+        // 创建评论表
+        String createCommentTable = """
+            CREATE TABLE IF NOT EXISTS comment (
+                id BIGINT NOT NULL AUTO_INCREMENT,
+                article_id BIGINT NOT NULL,
+                author_name VARCHAR(30) NOT NULL,
+                content VARCHAR(500) NOT NULL,
+                ip VARCHAR(45) DEFAULT NULL,
+                status TINYINT DEFAULT 1,
+                created_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (id),
+                KEY idx_article_id (article_id),
+                KEY idx_created_time (created_time),
+                FOREIGN KEY (article_id) REFERENCES article(id) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """;
+        statement.execute(createCommentTable);
     }
 
     private void ensureRoleColumn(Connection connection) throws Exception {

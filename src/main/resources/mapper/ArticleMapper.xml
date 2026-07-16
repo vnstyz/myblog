@@ -92,6 +92,20 @@
         WHERE id = #{id}
     </update>
 
+    <select id="findLikeCountById" resultType="java.lang.Long">
+        SELECT like_count FROM article WHERE id = #{id}
+    </select>
+
+    <update id="updateCommentCount">
+        UPDATE article
+        SET comment_count = comment_count + #{count}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findCommentCountById" resultType="java.lang.Long">
+        SELECT comment_count FROM article WHERE id = #{id}
+    </select>
+
     <select id="getStats" resultType="java.util.HashMap">
         SELECT
             COUNT(*) as articleCount,

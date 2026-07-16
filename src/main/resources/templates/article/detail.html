@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title} + ' - MyBlog'">文章详情 - MyBlog</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="stylesheet" th:href="@{/css/blog.css}">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
 </head>
@@ -61,13 +63,43 @@
             </div>
 
             <div style="text-align: center; padding: 40px 0 20px;">
-                <button class="like-btn">
+                <button class="like-btn" th:data-article-id="${article.id}">
                     <i class="ri-heart-line"></i>
                     <span>点赞</span>
                     <span class="like-count" th:text="${article.likeCount}">0</span>
                 </button>
+                <div class="like-tip" aria-live="polite"></div>
             </div>
         </article>
+
+        <!-- 评论区 -->
+        <section class="comment-section" th:data-article-id="${article.id}">
+            <div class="comment-header">
+                <i class="ri-chat-3-line"></i>
+                <span>评论</span>
+                <span class="comment-count-badge" th:text="${article.commentCount}">0</span>
+            </div>
+
+            <!-- 评论输入框 -->
+            <form class="comment-form" id="commentForm">
+                <textarea class="comment-input" id="commentInput" maxlength="500"
+                          placeholder="写下你的评论，无需登录（将以访客身份发布）…"></textarea>
+                <div class="comment-form-footer">
+                    <span class="comment-counter"><span id="commentCharCount">0</span>/500</span>
+                    <button type="submit" class="btn btn-primary comment-submit">
+                        <i class="ri-send-plane-line"></i> 发表评论
+                    </button>
+                </div>
+            </form>
+            <div class="comment-tip" aria-live="polite"></div>
+
+            <!-- 评论列表 -->
+            <ul class="comment-list" id="commentList"></ul>
+            <div class="comment-empty" id="commentEmpty" style="display:none;">
+                <i class="ri-chat-1-line"></i>
+                <p>还没有评论，来抢沙发吧～</p>
+            </div>
+        </section>
 
         <div style="text-align: center; padding: 20px 0 60px;">
             <a href="/" class="like-btn" style="text-decoration: none;">

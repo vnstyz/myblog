@@ -55,3 +55,13 @@ logging:
   level:
     site.vnstyz.myblog: debug
     root: warn
+
+blog:
+  like:
+    # 同一 IP 对同一篇文章的点赞冷却时长（分钟），冷却期内不可重复点赞
+    cooldown-minutes: 60
+  comment:
+    # 同一 IP 的评论冷却时长（秒），冷却期内不可重复评论
+    cooldown-seconds: 60
+    # 评论内容最大字符数（与 CommentRequest 的 @Size 校验保持一致）
+    max-length: 500
