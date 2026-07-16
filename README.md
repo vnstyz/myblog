@@ -2,6 +2,8 @@
 
 基于 Spring Boot 3.5 + MyBatis + Thymeleaf 的个人博客系统。
 
+> 在线演示地址：https://myblog.vnstyz.site/
+
 ## 技术栈
 
 - Spring Boot 3.5 / Java 21
