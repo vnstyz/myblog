@@ -85,11 +85,11 @@
         </div>
         <div class="footer-col">
             <h4>联系方式</h4>
-            <a href="mailto:johnsmithvnstzy@gmail.com"><i class="ri-mail-line"></i> johnsmithvnstzy@gmail.com</a>
+            <a th:href="'mailto:' + ${siteEmail}" href="mailto:johnsmithvnstzy@gmail.com"><i class="ri-mail-line"></i> <span th:text="${siteEmail}">johnsmithvnstzy@gmail.com</span></a>
         </div>
     </div>
     <div class="footer-bottom">
-        &copy; 2026 MyBlog. Powered by Spring Boot. All rights reserved.
+        &copy; <span th:text="${copyrightYear}">2026</span> <span th:text="${siteName}">MyBlog</span>. Powered by Spring Boot. All rights reserved.
     </div>
 </footer>
 

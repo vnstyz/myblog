@@ -14,22 +14,7 @@
     <div class="stars-container"></div>
     <div class="grid-bg"></div>
 
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="navbar-inner">
-            <a href="/" class="nav-brand">
-                <span class="brand-icon"><i class="ri-quill-pen-line"></i></span>
-                <span>MyBlog</span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="/">首页</a></li>
-                <li><a href="/about">关于</a></li>
-            </ul>
-            <button class="nav-toggle" aria-label="菜单">
-                <i class="ri-menu-line"></i>
-            </button>
-        </div>
-    </nav>
+    <th:block th:replace="~{fragments :: siteNavbar('')}"></th:block>
 
     <!-- 文章详情 -->
     <div class="article-detail-wrapper">
@@ -108,26 +93,7 @@
         </div>
     </div>
 
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-col">
-                <h4>关于本站</h4>
-                <p>一个基于 Spring Boot + MyBatis + Thymeleaf 构建的个人博客。</p>
-            </div>
-            <div class="footer-col">
-                <h4>快速链接</h4>
-                <a href="/">首页</a>
-                <a href="/about">关于我</a>
-            </div>
-            <div class="footer-col">
-                <h4>联系方式</h4>
-                <a href="mailto:admin@example.com"><i class="ri-mail-line"></i> admin@example.com</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2024 MyBlog. Powered by Spring Boot. All rights reserved.
-        </div>
-    </footer>
+    <th:block th:replace="~{fragments :: siteFooter}"></th:block>
 
     <script th:src="@{/js/blog.js}"></script>
 </body>
